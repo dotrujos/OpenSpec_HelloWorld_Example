@@ -1,0 +1,111 @@
+@baseUrl = http://localhost:3000
+
+### Health check
+GET {{baseUrl}}/health
+
+### Score ALTO (~427) — poucas transações pagas em dia, uma atrasada e uma inadimplente
+POST {{baseUrl}}/credit-score
+Content-Type: application/json
+
+{
+  "user": { "id": "u1", "name": "Ana" },
+  "transactions": [
+    { "id": "t1", "amount": 100, "dueDate": "2024-01-01", "paidDate": "2024-01-01", "status": "paid" },
+    { "id": "t2", "amount": 100, "dueDate": "2024-01-02", "status": "late" },
+    { "id": "t3", "amount": 100, "dueDate": "2024-01-03", "status": "unpaid" }
+  ]
+}
+
+### Score MÉDIO (~603) — maioria paga em dia, uma transação atrasada
+POST {{baseUrl}}/credit-score
+Content-Type: application/json
+
+{
+  "user": { "id": "u2", "name": "Bruno" },
+  "transactions": [
+    { "id": "t1", "amount": 100, "dueDate": "2024-01-01", "paidDate": "2024-01-01", "status": "paid" },
+    { "id": "t2", "amount": 100, "dueDate": "2024-01-02", "paidDate": "2024-01-02", "status": "paid" },
+    { "id": "t3", "amount": 100, "dueDate": "2024-01-03", "status": "late" }
+  ]
+}
+
+### Score BAIXO (~840) — histórico totalmente pago em dia, bom volume
+POST {{baseUrl}}/credit-score
+Content-Type: application/json
+
+{
+  "user": { "id": "u3", "name": "Carla" },
+  "transactions": [
+    { "id": "t1", "amount": 100, "dueDate": "2024-01-01", "paidDate": "2024-01-01", "status": "paid" },
+    { "id": "t2", "amount": 100, "dueDate": "2024-01-02", "paidDate": "2024-01-02", "status": "paid" },
+    { "id": "t3", "amount": 100, "dueDate": "2024-01-03", "paidDate": "2024-01-03", "status": "paid" },
+    { "id": "t4", "amount": 100, "dueDate": "2024-01-04", "paidDate": "2024-01-04", "status": "paid" }
+  ]
+}
+
+### Score MUITO ALTO (~150) — todas as transações inadimplentes
+POST {{baseUrl}}/credit-score
+Content-Type: application/json
+
+{
+  "user": { "id": "u4", "name": "Diego" },
+  "transactions": [
+    { "id": "t1", "amount": 100, "dueDate": "2024-01-01", "status": "unpaid" },
+    { "id": "t2", "amount": 100, "dueDate": "2024-01-02", "status": "unpaid" },
+    { "id": "t3", "amount": 100, "dueDate": "2024-01-03", "status": "unpaid" }
+  ]
+}
+
+### Score MUITO BAIXO (~950) — grande volume pago em dia
+POST {{baseUrl}}/credit-score
+Content-Type: application/json
+
+{
+  "user": { "id": "u5", "name": "Elisa" },
+  "transactions": [
+    { "id": "t1", "amount": 100, "dueDate": "2024-01-01", "paidDate": "2024-01-01", "status": "paid" },
+    { "id": "t2", "amount": 100, "dueDate": "2024-01-02", "paidDate": "2024-01-02", "status": "paid" },
+    { "id": "t3", "amount": 100, "dueDate": "2024-01-03", "paidDate": "2024-01-03", "status": "paid" },
+    { "id": "t4", "amount": 100, "dueDate": "2024-01-04", "paidDate": "2024-01-04", "status": "paid" },
+    { "id": "t5", "amount": 100, "dueDate": "2024-01-05", "paidDate": "2024-01-05", "status": "paid" },
+    { "id": "t6", "amount": 100, "dueDate": "2024-01-06", "paidDate": "2024-01-06", "status": "paid" },
+    { "id": "t7", "amount": 100, "dueDate": "2024-01-07", "paidDate": "2024-01-07", "status": "paid" },
+    { "id": "t8", "amount": 100, "dueDate": "2024-01-08", "paidDate": "2024-01-08", "status": "paid" },
+    { "id": "t9", "amount": 100, "dueDate": "2024-01-09", "paidDate": "2024-01-09", "status": "paid" },
+    { "id": "t10", "amount": 100, "dueDate": "2024-01-10", "paidDate": "2024-01-10", "status": "paid" },
+    { "id": "t11", "amount": 100, "dueDate": "2024-01-11", "paidDate": "2024-01-11", "status": "paid" },
+    { "id": "t12", "amount": 100, "dueDate": "2024-01-12", "paidDate": "2024-01-12", "status": "paid" },
+    { "id": "t13", "amount": 100, "dueDate": "2024-01-13", "paidDate": "2024-01-13", "status": "paid" },
+    { "id": "t14", "amount": 100, "dueDate": "2024-01-14", "paidDate": "2024-01-14", "status": "paid" },
+    { "id": "t15", "amount": 100, "dueDate": "2024-01-15", "paidDate": "2024-01-15", "status": "paid" }
+  ]
+}
+
+### Sem histórico de transações — score neutro dentro de 0-1000
+POST {{baseUrl}}/credit-score
+Content-Type: application/json
+
+{
+  "user": { "id": "u6", "name": "Fábio" },
+  "transactions": []
+}
+
+### Erro 400 — usuário inválido (id vazio)
+POST {{baseUrl}}/credit-score
+Content-Type: application/json
+
+{
+  "user": { "id": "", "name": "Sem Id" },
+  "transactions": []
+}
+
+### Erro 400 — transações malformadas (status inválido)
+POST {{baseUrl}}/credit-score
+Content-Type: application/json
+
+{
+  "user": { "id": "u7", "name": "Gustavo" },
+  "transactions": [
+    { "id": "t1", "amount": 100, "dueDate": "2024-01-01", "status": "overdue" }
+  ]
+}
